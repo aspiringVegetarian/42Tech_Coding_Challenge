@@ -13,42 +13,98 @@ def hierarchical_sort(filename, metric):
                 continue
             rows.append(row)
     
-            
     
     # find the index of the column we are ulitmately going to sort on
     # count number of properties
     # O(m) where m is the number of columns in the txt file
     num_props = 0
-    for col_idx, col_name in enumerate(header):
-        if col_name == metric:
-            col_idx_to_sort_on = col_idx
+    for i, name in enumerate(header):
+        if name == metric:
+            col_idx_to_sort_on = i
             continue
-        if "property" in col_name:
+        if "property" in name:
             num_props += 1
     
-    sorted_rows = sorted(rows, key=lambda row : row[col_idx_to_sort_on], reverse=True)
+    # we make a trie to help us do the sorting by grouping
+    # the terminator of a path in the trie will be a tuple with the following data:
+    # (row index, float value of the desired metric of the row)
+    trie = {}
+    for i, row in enumerate(rows):
+        j = 0
+        cur = trie
+        while j < num_props-1:
+            if row[j] not in cur:
+                cur[row[j]] = {}
+            cur = cur[row[j]]
+            j += 1
+        cur[row[j]] = (i, float(row[col_idx_to_sort_on]))
+    
 
-    print("After first sort")
-    print(header)
-    for row in sorted_rows:
-        print(row)
-
-    total_sorted = []
-    for i in range(num_props):
-        for row in sorted_rows:
-            if row[i] == "$total":
-                if i == 0:
-                    total_sorted.append(row)
-                    break
-                else:
-                    if row[i-1] == "$total":
-                        continue
-                    else:
-                         total_sorted.append(row)
- 
+    # use our get_top_line helper function to trim the top line total from our trie
+    # we store the row index of the top line total in a new list, row_order
+    # row_order will store the indicies of the rows in the correct hierarchical sorted order 
+    row_order = [get_top_line(trie)[0]]
+  
+    # call our trie_digger helper function on our trie and pass in the row_order
+    # trie digger with recursively sort the sub groups by the metric of choice
+    # then appends the row indicies in the correct hierarchical sorted order 
+    trie_digger(trie, row_order)
 
 
-    print("After second sort")
-    print(header)
-    for row in total_sorted:
-        print(row)
+    # call our recombine_data helper function to recombine the rows (pipe delimited) and the header
+    ordered_rows = recombine_data(header, rows, row_order)
+
+    # create a new txt file at the same file location but with output instead of input in the name
+    # write the lines in the correct hierarchical sorted order 
+    output_filename = filename.replace('input','output')
+    with open(output_filename, "w") as f:
+        for i in range(len(ordered_rows)):
+            f.write(ordered_rows[i])
+            # ensure we dont have a new line at the bottom of the txt file
+            if i < len(ordered_rows)-1:
+                f.write("\n")
+    
+    print(f"You will find your hierarchically sorted data at the following location : {output_filename}")
+
+
+def get_top_line(trie):
+    # we hit our trie path terminator, so return the tuple
+    if type(trie) is tuple:
+        return trie
+    else:
+        # recursive down until we hit our terminator
+        val = get_top_line(trie['$total'])
+    # trim the total path from our trie
+    del trie['$total']
+    return val
+
+
+def trie_digger(trie, row_order):
+    
+    # level by level, we will find the top line totals and sort them based on the metric of choice
+    sublist = []
+    for key in trie:
+        # sublist will have tuple with the following information:
+        # (key, row index, float value of the desired metric of the row)
+        sublist.append((key, *get_top_line(trie[key])))
+
+    # sort on the float value of the desired metric in Descending order
+    sublist.sort(key=lambda tuple : tuple[2], reverse=True)
+    
+    # our sorted sublist allows us to recurse lower in the correct order
+    for item in sublist:
+        row_idx = item[1]
+        next_key = item[0]
+        # append the next row index to the row_order list before we recurse further 
+        row_order.append(row_idx)
+        # we do not recurse further when the next value is a tuple 
+        if type(trie[next_key]) is not tuple:
+            trie_digger(trie[next_key], row_order)
+        
+
+def recombine_data(header, rows, row_order):
+    ordered_rows = ["|".join(header)]
+    for i in row_order:
+        # pipe delimited like the input
+        ordered_rows.append("|".join(rows[i]))
+    return ordered_rows

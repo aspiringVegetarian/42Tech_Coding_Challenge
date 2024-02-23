@@ -4,13 +4,13 @@ from HierarchicalSort import hierarchical_sort
 
 filename = input("Please provide the full file path of the dataset to be sorted in a hierarchical fashion: ")
 if filename == "":
-    filename = "./data-small-input.txt"
+    filename = "./data-big-input.txt"
 
 print()
 
 metric_to_sort_on = input("Please provide the metric you would like to sort on: ")
 if metric_to_sort_on == "":
-    metric_to_sort_on = "net_sales"
+    metric_to_sort_on = "net_sales_units"
 
 print()
 
