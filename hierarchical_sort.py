@@ -18,12 +18,15 @@ def hierarchical_sort(filename: str, metric: str, delimiter: str = "|", output_f
     # count number of properties
     # O(m) where m is the number of columns in the txt file
     num_props = 0
+    col_idx_to_sort_on = None
     for i, name in enumerate(header):
         if name == metric:
             col_idx_to_sort_on = i
             continue
         if "property" in name:
             num_props += 1
+    if not col_idx_to_sort_on:
+        raise NameError("The metric you provided does not exist in the header of the input dataset. Please provide a valid metric.") 
     
     # we make a trie to help us do the sorting by grouping
     # the terminator of a path in the trie will be a tuple with the following data:
