@@ -13,13 +13,11 @@ The solution is implemented in [hierarchical_sort.py](hierarchical_sort.py). The
 
 For ease, I have made the [main.py](main.py) file. 
 
-If you clone this repo, you could just simply run main.py, which will ask if you would like to see a demo of the solution by sorting `data-big-input.txt` by `net_sales_units`.
+If you clone this repo, you could just simply change directory into the repo and run main.py. There will be a prompty asking if you would like to see a demo of the solution by sorting `data-big-input.txt` by `net_sales_units`.
 
-The function will generate the output file `data-big-output.txt` with the sorted data.
+The function will create a new text file `sorted_output.txt` with the sorted output dataset. 
 
 If you do not accept the prompt for the demo, it will then prompt you for a filename path and a metric to sort by. 
-
-It will generate the sorted output dataset as `sorted_output.txt` in the same directory as main.py.
 
 ### Function Info
 
