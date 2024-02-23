@@ -1,4 +1,4 @@
-def hierarchical_sort(filename, metric):
+def hierarchical_sort(filename: str, metric: str, delimiter: str = "|", output_filename: str = "./sorted_output.txt") -> None:
     # read data from file and preprocess each pipe delimited line into its own row
     # special processing for the header
     # O(n) where n is the number of lines in the txt file
@@ -6,7 +6,7 @@ def hierarchical_sort(filename, metric):
     header_proccessed = False
     with open(filename) as f:
         for line in f:
-            row = line.rstrip().split('|')
+            row = line.rstrip().split(delimiter)
             if not header_proccessed:
                 header = row
                 header_proccessed = True
@@ -52,11 +52,10 @@ def hierarchical_sort(filename, metric):
 
 
     # call our recombine_data helper function to recombine the rows (pipe delimited) and the header
-    ordered_rows = recombine_data(header, rows, row_order)
+    ordered_rows = recombine_data(header, rows, row_order, delimiter)
 
-    # create a new txt file at the same file location but with output instead of input in the name
+    # create a new txt file as specified in the function arguement
     # write the lines in the correct hierarchical sorted order 
-    output_filename = filename.replace('input','output')
     with open(output_filename, "w") as f:
         for i in range(len(ordered_rows)):
             f.write(ordered_rows[i])
@@ -105,9 +104,9 @@ def trie_digger(trie, row_order):
             trie_digger(trie[next_key], row_order)
         
 
-def recombine_data(header, rows, row_order):
+def recombine_data(header, rows, row_order, delimiter):
     ordered_rows = ["|".join(header)]
     for i in row_order:
         # pipe delimited like the input
-        ordered_rows.append("|".join(rows[i]))
+        ordered_rows.append(delimiter.join(rows[i]))
     return ordered_rows
