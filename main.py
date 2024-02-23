@@ -1,4 +1,4 @@
-from HierarchicalSort import hierarchical_sort
+from hierarchical_sort import hierarchical_sort
 
 def main():
     print(f"\nHi 42 Technologies, this solution is brought to you by Martynas Vasiliauskas.\n")
