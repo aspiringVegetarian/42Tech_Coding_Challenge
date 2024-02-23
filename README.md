@@ -7,7 +7,7 @@ Use your function to sort the `data-big-input.txt` file by `net_sales_units`, fr
 
 ## Solution Instructions
 
-The solution is implemented in [hierarchical_sort.py](hierarchical_sort.py).
+The solution is implemented in [hierarchical_sort.py](hierarchical_sort.py). The code is well commented and includes a bit of commentary on the big O time complexity. 
 
 ### Quickstart with main.py
 
