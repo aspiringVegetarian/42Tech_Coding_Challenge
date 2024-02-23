@@ -67,6 +67,7 @@ def hierarchical_sort(filename, metric):
     print(f"You will find your hierarchically sorted data at the following location : {output_filename}")
 
 
+# O(p) where p is the number of properties
 def get_top_line(trie):
     # we hit our trie path terminator, so return the tuple
     if type(trie) is tuple:
@@ -78,7 +79,9 @@ def get_top_line(trie):
     del trie['$total']
     return val
 
-
+# O(n*p*log(n*p)) where n is the number of rows and p is the number of properties and every entry is unique
+# in reality, the built-in sort (timsort, O(nlog(n))) is only going to run on a list of the unqiue keys at each level
+# the space that the recursion might take up (if there is a very large data set with many unique entries) is more worrisome than the time complextity
 def trie_digger(trie, row_order):
     
     # level by level, we will find the top line totals and sort them based on the metric of choice
