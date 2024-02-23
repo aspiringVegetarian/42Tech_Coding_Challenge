@@ -19,7 +19,7 @@ The function will generate the output file `data-big-output.txt` with the sorted
 
 If you do not accept the prompt for the demo, it will then prompt you for a filename path and a metric to sort by. 
 
-Similiarly, it will generate an output file with the same name as the filename arguement but "input" will be replaced by "output"
+It will generate the sorted output dataset as `sorted_output.txt` in the same directory as main.py.
 
 ### Function Info
 
@@ -27,12 +27,16 @@ To use the function please import the hierarchical_sort function from [hierarchi
 
 The function has the following signature:
 ```py
-def hierarchical_sort(filename: str, metric: str) -> None:
+def hierarchical_sort(filename: str, metric: str, delimiter: str = "|", output_filename: str = "./sorted_output.txt") -> None:
 ```
-The function requires 2 input parameters:
-- filename : type string - could be relative or full path
-- metric :  type string - must match a metric name in the header of the file 
+The function has 2 mandatory input parameters:
+- filename : type string - defines the filename of the input dataset. Could be relative or full path.
+- metric :  type string - defines the metric to do the hierarchical sort on. Must match a metric name in the header of the file
 
-The function does not return anything, instead it will generate an output file with the same name as the filename arguement but "input" will be replaced by "output".
+The function has 2 optional input parameters:
+- delimiter : type string - defines the delimiter used in the input dataset and therefore the delimiter used in the output data. Defaults to pipe as defined in the challenge
+- output_filename :  type string - defines the filename of the sorted output dataset. Defaults to sorted_output.txt, relative to where the script was ran. 
+
+The function does not return anything.
 
 
